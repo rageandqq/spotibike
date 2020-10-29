@@ -1,12 +1,9 @@
-// import React from 'React';
-import './App.css';
-import Splash from './SplashScreen';
-import Login from './Login';
+import Splash from "./SplashScreen";
+import Login from "./Login";
 
 import * as React from "react";
 
-
-import { BrowserRouter as Router, Switch, Route, Link} from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 function App() {
   return (
@@ -14,17 +11,25 @@ function App() {
       <div>
         <nav>
           <ul>
-            <li><Link to="/">Splash</Link></li>
-            <li><Link to="/login">Login</Link></li>
+            <li>
+              <Link to="/">Splash</Link>
+            </li>
+            <li>
+              <Link to="/login">Login</Link>
+            </li>
           </ul>
         </nav>
       </div>
       <Switch>
-        <Route path="/login"><Login/></Route>
-        <Route path="/"><Splash /></Route>
+        <Route path="/login">
+          <Login />
+        </Route>
+        <Route path="/">
+          <Splash />
+        </Route>
       </Switch>
     </Router>
-  )
+  );
 }
 
 export default App;
