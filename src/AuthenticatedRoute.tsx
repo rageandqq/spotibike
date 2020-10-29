@@ -9,7 +9,7 @@ interface IProps {
 }
 
 const SPOTIFY_AUTH_URI = "https://accounts.spotify.com/authorize";
-const CLIENT_ID = "";
+const CLIENT_ID = "6fd3ee11d3a146ffad18854c9762964c";
 const REDIRECT_URI = "http://localhost:3000/";
 
 const getRedirectURI = () =>
