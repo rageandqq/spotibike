@@ -8,15 +8,20 @@ type IProps = {
 };
 
 export default function SpotifyProvider({ children }: IProps) {
-  const [accessToken, setAccessToken] = useState<string | undefined>(undefined);
-  const [expiresAt, setExpiresAt] = useState<number | undefined>(undefined);
-
   const hashParams = new URLSearchParams(
     window.location.hash.substr(1) // skip the first char (#)
   );
   const accessTokenFromAuth = hashParams.get("access_token");
   const expiresInFromAuth = hashParams.get("exipres_in");
 
+  const [accessToken, setAccessToken] = useState<string | null>(
+    accessTokenFromAuth
+  );
+  const [expiresAt, setExpiresAt] = useState<number | null>(
+    expiresInFromAuth != null ? +expiresInFromAuth : null // not a typo, use "+" to convert to number
+  );
+
+  // This is probbaly unnecessary... but if it changes, we should do something
   useEffect(() => {
     if (accessTokenFromAuth != null) {
       setAccessToken(accessTokenFromAuth);
