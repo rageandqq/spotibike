@@ -3,11 +3,22 @@ import { useCallback, useContext, useState } from "react";
 
 import SpotifyContext from "./SpotifyContext";
 
-import { Button, Box, Slider, makeStyles } from "@material-ui/core";
+import {
+  Button,
+  Box,
+  Slider,
+  makeStyles,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from "@material-ui/core";
 import { Link } from "react-router-dom";
 
-const MIN_BPM = 30;
-const MAX_BPM = 150;
+const MIN_BPM = 50;
+const MAX_BPM = 220;
 
 const useStyles = makeStyles({
   root: {
@@ -22,6 +33,10 @@ const useStyles = makeStyles({
   },
   link: {
     textDecoration: "none",
+  },
+  table: {
+    maxWidth: 500,
+    marginBottom: 40,
   },
 });
 
@@ -50,7 +65,34 @@ export default function Setup() {
 
   return (
     <Box display="flex" flexDirection="column" className={classes.root}>
-      <div>Recommended BPM: ~90</div>
+      <TableContainer>
+        <Table size="medium" className={classes.table}>
+          <TableHead>
+            <TableRow>
+              <TableCell>Biking Type</TableCell>
+              <TableCell>Recommended BPM Range</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            <TableRow>
+              <TableCell>Recovery</TableCell>
+              <TableCell>~100-110 BPM</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Intervals</TableCell>
+              <TableCell>~160+ BPM</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Tempo</TableCell>
+              <TableCell>~140-150 BPM</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Endurance</TableCell>
+              <TableCell>~120-130 BPM</TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </TableContainer>
       <div>
         Selected BPM: {bpmRange[0]} - {bpmRange[1]}
       </div>
@@ -83,7 +125,7 @@ export default function Setup() {
             Make Playlist from Your Artists/Albums
           </Link>
         </Button>
-        {/* <Button
+        <Button
           variant="contained"
           onClick={emptyFunction}
           className={classes.button}
@@ -94,7 +136,7 @@ export default function Setup() {
           >
             Make Playlist from Random Top Music
           </Link>
-        </Button> */}
+        </Button>
       </Box>
     </Box>
   );

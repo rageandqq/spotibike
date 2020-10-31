@@ -4,12 +4,35 @@ import SpotifyContext from "./SpotifyContext";
 import { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 
+import { Button, makeStyles } from "@material-ui/core";
+import { Link } from "react-router-dom";
+
 type PlaylistData = {
   external_urls: {
     spotify: string;
   };
   images: string[];
 };
+
+const useStyles = makeStyles({
+  root: {
+    padding: 32,
+  },
+  buttons: {
+    padding: 64,
+  },
+  button: {
+    marginLeft: 12,
+    marginRight: 12,
+  },
+  link: {
+    textDecoration: "none",
+  },
+  table: {
+    maxWidth: 500,
+    marginBottom: 40,
+  },
+});
 
 function usePlaylistDetails(id: string) {
   const { api } = useContext(SpotifyContext);
@@ -22,10 +45,13 @@ function usePlaylistDetails(id: string) {
   return playlistData;
 }
 
+const emptyFunction = () => {};
 export default function Success() {
   const { isAuth } = useContext(SpotifyContext);
   const { playlistid: playlistID } = useParams<{ playlistid: string }>();
   const playlistData = usePlaylistDetails(playlistID);
+
+  const classes = useStyles();
 
   if (!isAuth) {
     return <></>;
@@ -33,10 +59,25 @@ export default function Success() {
 
   return (
     <div>
-      Playlist Created:{" "}
-      <a href={playlistData?.external_urls.spotify}>
-        {playlistData?.external_urls.spotify ?? "Loading Details..."}
-      </a>
+      <div>
+        Playlist Created:{" "}
+        <a href={playlistData?.external_urls.spotify}>
+          {playlistData?.external_urls.spotify ?? "Loading Details..."}
+        </a>
+      </div>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={emptyFunction}
+        className={classes.button}
+      >
+        <Link
+          to={"/spotibike/setup"}
+          style={{ textDecoration: "none", color: "white" }}
+        >
+          Make Another
+        </Link>
+      </Button>
     </div>
   );
 }

@@ -2,6 +2,7 @@ import * as React from "react";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import useUserSongs from "./hooks/useUserSongs";
+import useTopSongs from "./hooks/useTopSongs";
 import useFilterTracksByBPM from "./hooks/useFilterTracksByBPM";
 
 import SpotifyContext from "./SpotifyContext";
@@ -51,7 +52,10 @@ export default function Songs() {
   const minBpm = +(params.get("min_bpm") ?? "0");
   const maxBpm = +(params.get("max_bpm") ?? "0");
 
-  const [tracks] = useUserSongs();
+  const [userTracks] = useUserSongs();
+  const [topTracks] = useTopSongs();
+  const tracks = useUserArtists ? userTracks : topTracks;
+
   const filteredTracks: TrackInfo[] = useFilterTracksByBPM(
     tracks,
     minBpm,
