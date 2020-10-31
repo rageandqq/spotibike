@@ -19,7 +19,7 @@ const SCOPES = [
   "user-library-read", // TODO: Determine if we need thsi
 ];
 
-const ALWAYS_AUTHENTICATE = true; // TODO: we should figure out when we want to authenticate
+const ALWAYS_AUTHENTICATE = false; // TODO: we should figure out when we want to authenticate
 
 const getRedirectURI = () =>
   encodeURI(

@@ -5,6 +5,7 @@ import SpotifyContext from "./SpotifyContext";
 
 import {
   Box,
+  Button,
   Checkbox,
   makeStyles,
   Table,
@@ -13,6 +14,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TextField,
 } from "@material-ui/core";
 
 const useStyles = makeStyles({
@@ -21,6 +23,10 @@ const useStyles = makeStyles({
   },
   table: {
     minWidth: 750,
+  },
+  button: {
+    marginLeft: 12,
+    marginRight: 12,
   },
 });
 
@@ -75,7 +81,7 @@ function useFilterTracksByBPM(tracks: any, minBpm: number, maxBpm: number) {
         );
         setFilteredTracks(filteredTracks);
       });
-  }, [api, tracks]);
+  }, [api, tracks, minBpm, maxBpm]);
 
   useEffect(() => {
     // filter whenever tracks length changes
@@ -85,9 +91,15 @@ function useFilterTracksByBPM(tracks: any, minBpm: number, maxBpm: number) {
   return filteredTracks;
 }
 
+type TrackInfo = {
+  id: string;
+  uri: string;
+};
+
 export default function Songs() {
-  const [selectedTrackIDs, setSelectedTrackIDs] = useState<string[]>([]);
-  const { isAuth } = useContext(SpotifyContext);
+  const [selectedTrackInfo, setSelectedTrackInfo] = useState<TrackInfo[]>([]);
+  const [playlistName, setPlaylistName] = useState<string>("");
+  const { isAuth, api, userID } = useContext(SpotifyContext);
   const classes = useStyles();
 
   const params = new URLSearchParams(window.location.search);
@@ -97,39 +109,106 @@ export default function Songs() {
   const maxBpm = +(params.get("max_bpm") ?? "0");
 
   const [tracks] = useUserSongs();
-  const filteredTracks = useFilterTracksByBPM(tracks, minBpm, maxBpm);
+  const filteredTracks: TrackInfo[] = useFilterTracksByBPM(
+    tracks,
+    minBpm,
+    maxBpm
+  );
 
   if (!isAuth) return <></>;
 
-  const handleClick = (id: string) => {
-    const selectedIndex = selectedTrackIDs.indexOf(id);
-    let newSelected: string[] = [];
+  const handleClick = (id: string, uri: string) => {
+    const selectedIndex = selectedTrackInfo.map((info) => info.id).indexOf(id);
+    let newSelected: TrackInfo[] = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selectedTrackIDs, id);
+      newSelected = newSelected.concat(selectedTrackInfo, { id, uri });
     } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selectedTrackIDs.slice(1));
-    } else if (selectedIndex === selectedTrackIDs.length - 1) {
-      newSelected = newSelected.concat(selectedTrackIDs.slice(0, -1));
+      newSelected = newSelected.concat(selectedTrackInfo.slice(1));
+    } else if (selectedIndex === selectedTrackInfo.length - 1) {
+      newSelected = newSelected.concat(selectedTrackInfo.slice(0, -1));
     } else if (selectedIndex > 0) {
-      newSelected = selectedTrackIDs.concat(
-        selectedTrackIDs.slice(0, selectedIndex),
-        selectedTrackIDs.slice(selectedIndex + 1)
+      newSelected = selectedTrackInfo.concat(
+        selectedTrackInfo.slice(0, selectedIndex),
+        selectedTrackInfo.slice(selectedIndex + 1)
       );
     }
 
-    setSelectedTrackIDs(newSelected);
+    setSelectedTrackInfo(newSelected);
+  };
+
+  const handleSelectAllClicked = () => {
+    if (selectedTrackInfo.length === 0) {
+      const selectedTrackInfo = filteredTracks.map(
+        ({ id, uri }: { id: string; uri: string }) => ({
+          id,
+          uri,
+        })
+      );
+      setSelectedTrackInfo(selectedTrackInfo);
+    } else {
+      setSelectedTrackInfo([]);
+    }
+  };
+
+  const isCreateButtonDisabled =
+    playlistName.trim() === "" || selectedTrackInfo.length < 1;
+  const createPlaylist = () => {
+    if (isCreateButtonDisabled) {
+      return;
+    }
+    api
+      .createPlaylist(userID, {
+        name: playlistName,
+        public: false, // make playlist private by default
+        description: "Playlist made by Spotibike tool",
+      })
+      .then((data: { id: string }) => {
+        const selectedTrackURIs = selectedTrackInfo.map((info) => info.uri);
+        // TODO: handle > 100 items to add to playlist
+        api.addTracksToPlaylist(data.id, selectedTrackURIs).then(() => {
+          // TODO: Success handling
+        });
+      });
   };
 
   return (
     <Box display="flex" flexDirection="column" className={classes.root}>
-      <div> Song Select </div>
-      <div> Use user artists: {useUserArtists ? "true" : "false"} </div>
+      <div>
+        <div>Song Select</div>
+        <div>
+          Enter Playlist Name:{" "}
+          <TextField
+            label="Playlist Name"
+            variant="filled"
+            value={playlistName}
+            onChange={(event: any) => setPlaylistName(event.target.value)}
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={createPlaylist}
+            className={classes.button}
+            disabled={isCreateButtonDisabled}
+          >
+            Create Playlist
+          </Button>
+        </div>
+      </div>
       <TableContainer>
         <Table className={classes.table} size={"medium"}>
           <TableHead>
             <TableRow>
-              <TableCell>Selected</TableCell>
+              <TableCell padding="checkbox">
+                <Checkbox
+                  onChange={handleSelectAllClicked}
+                  indeterminate={
+                    selectedTrackInfo.length > 0 &&
+                    selectedTrackInfo.length < filteredTracks.length
+                  }
+                  checked={selectedTrackInfo.length > 0}
+                />
+              </TableCell>
               <TableCell>Track Name</TableCell>
               <TableCell>Artist(s)</TableCell>
               <TableCell>Album</TableCell>
@@ -137,10 +216,17 @@ export default function Songs() {
           </TableHead>
           <TableBody>
             {filteredTracks.map((track: any) => {
-              const isSelected = selectedTrackIDs.includes(track.id);
+              const isSelected = selectedTrackInfo
+                .map((info: { id: string }) => info.id)
+                .includes(track.id);
               return (
-                <TableRow key={track.id} onClick={() => handleClick(track.id)}>
-                  <TableCell>
+                <TableRow
+                  hover
+                  role="checkbox"
+                  key={track.id}
+                  onClick={() => handleClick(track.id, track.uri)}
+                >
+                  <TableCell padding="checkbox">
                     <Checkbox checked={isSelected} />
                   </TableCell>
                   <TableCell>{track.name}</TableCell>

@@ -83,7 +83,7 @@ export default function Setup() {
             Make Playlist from Your Artists/Albums
           </Link>
         </Button>
-        <Button
+        {/* <Button
           variant="contained"
           onClick={emptyFunction}
           className={classes.button}
@@ -94,7 +94,7 @@ export default function Setup() {
           >
             Make Playlist from Random Top Music
           </Link>
-        </Button>
+        </Button> */}
       </Box>
     </Box>
   );
