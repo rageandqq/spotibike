@@ -1,7 +1,7 @@
 import * as React from "react";
 import SpotifyContext from "./SpotifyContext";
 
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { Button, makeStyles } from "@material-ui/core";
@@ -38,9 +38,12 @@ function usePlaylistDetails(id: string) {
   const { api } = useContext(SpotifyContext);
   const [playlistData, setPlaylistData] = useState<null | PlaylistData>(null);
 
-  api.getPlaylist(id).then(({ external_urls, images }: PlaylistData) => {
-    setPlaylistData({ external_urls, images });
-  });
+  useEffect(() => {
+    // refetch when either API or ID change
+    api.getPlaylist(id).then(({ external_urls, images }: PlaylistData) => {
+      setPlaylistData({ external_urls, images });
+    });
+  }, [api, id]);
 
   return playlistData;
 }

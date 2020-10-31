@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { useHistory } from "react-router-dom";
 import useUserSongs from "./hooks/useUserSongs";
 import useTopSongs from "./hooks/useTopSongs";
@@ -11,6 +11,7 @@ import {
   Box,
   Button,
   Checkbox,
+  CircularProgress,
   makeStyles,
   Table,
   TableBody,
@@ -39,6 +40,16 @@ type TrackInfo = {
   uri: string;
 };
 
+function useSongs(
+  useUserArtists: boolean
+): [any, () => void, boolean, boolean] {
+  // TODO: Figure out how to only issue query for one of these
+  const userSongs = useUserSongs();
+  const topSongs = useTopSongs();
+
+  return useUserArtists ? userSongs : topSongs;
+}
+
 export default function Songs() {
   const [selectedTrackInfo, setSelectedTrackInfo] = useState<TrackInfo[]>([]);
   const [playlistName, setPlaylistName] = useState<string>("");
@@ -52,15 +63,14 @@ export default function Songs() {
   const minBpm = +(params.get("min_bpm") ?? "0");
   const maxBpm = +(params.get("max_bpm") ?? "0");
 
-  const [userTracks] = useUserSongs();
-  const [topTracks] = useTopSongs();
-  const tracks = useUserArtists ? userTracks : topTracks;
+  const [tracks, loadMore, hasMore, isLoadingMore] = useSongs(useUserArtists);
 
   const filteredTracks: TrackInfo[] = useFilterTracksByBPM(
     tracks,
     minBpm,
     maxBpm
   );
+  console.log({ tracks, filteredTracks });
 
   if (!isAuth) return <></>;
 
@@ -187,6 +197,10 @@ export default function Songs() {
           </TableBody>
         </Table>
       </TableContainer>
+      {isLoadingMore && <CircularProgress />}
+      <Button onClick={loadMore} disabled={!hasMore || isLoadingMore}>
+        Load More
+      </Button>
     </Box>
   );
 }

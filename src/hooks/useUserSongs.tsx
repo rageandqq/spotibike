@@ -2,22 +2,32 @@ import { useCallback, useContext, useEffect, useRef, useState } from "react";
 
 import SpotifyContext from "./../SpotifyContext";
 
-export default function useUserSongs() {
+export default function useUserSongs(): [any, () => void, boolean, boolean] {
   const [tracks, setTracks] = useState([]);
-  const tracksRef = useRef(tracks);
+
+  const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
+  const [trackCount, setTrackCount] = useState<number>(0);
+  const [madeFirstRequest, setMadeFirstRequest] = useState<boolean>(false);
 
   const { api } = useContext(SpotifyContext);
 
-  // todo: use offset for load more
+  const offset = tracks.length;
   const loadMore = useCallback(() => {
+    setMadeFirstRequest(true);
+    setIsLoadingMore(true);
     api
-      .getMySavedTracks({ limit: 50, offset: tracksRef.current.length ?? 0 })
+      .getMySavedTracks({ limit: 50, offset })
       .then((data: any) => {
-        setTracks(
-          data.items.map((i: { added_at: string; track: any }) => i.track)
+        setTrackCount(data.total);
+        const newTracks = data.items.map(
+          (i: { added_at: string; track: any }) => i.track
         );
+        setTracks(tracks.concat(newTracks));
+      })
+      .finally(() => {
+        setIsLoadingMore(false);
       });
-  }, [api]);
+  }, [api, tracks, offset]);
   const loadMoreRef = useRef(loadMore);
 
   useEffect(() => {
@@ -26,5 +36,6 @@ export default function useUserSongs() {
     }
   }, [tracks]);
 
-  return [tracks, loadMoreRef.current];
+  const hasMore = !madeFirstRequest || tracks.length < trackCount;
+  return [tracks, loadMore, hasMore, isLoadingMore];
 }
