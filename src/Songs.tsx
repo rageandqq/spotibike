@@ -73,13 +73,16 @@ export default function Songs() {
   const minBpm = +(params.get("min_bpm") ?? "0");
   const maxBpm = +(params.get("max_bpm") ?? "0");
 
-  const [tracks, loadMore, hasMore, isLoadingMore] = useSongs(useUserArtists);
-
-  const filteredTracks: TrackInfo[] = useFilterTracksByBPM(
-    tracks,
-    minBpm,
-    maxBpm
+  const [tracks, loadMore, hasMore, isLoadingMoreSongs] = useSongs(
+    useUserArtists
   );
+
+  const [filteredTracks, isLoadingFilterData]: [
+    TrackInfo[],
+    boolean
+  ] = useFilterTracksByBPM(tracks, minBpm, maxBpm);
+
+  const isLoading = isLoadingMoreSongs || isLoadingFilterData;
 
   if (!isAuth) return <></>;
 
@@ -209,8 +212,8 @@ export default function Songs() {
           </TableBody>
         </Table>
       </TableContainer>
-      {isLoadingMore && <CircularProgress />}
-      <Button onClick={loadMore} disabled={!hasMore || isLoadingMore}>
+      {isLoading && <CircularProgress />}
+      <Button onClick={loadMore} disabled={!hasMore || isLoading}>
         Load More
       </Button>
     </Box>

@@ -7,13 +7,18 @@ import usePrevious from "./usePrevious";
 // map track ID to tempo
 const tempoMap = new Map<string, null | number>();
 
+type TrackInfo = {
+  id: string;
+  uri: string;
+};
 export default function useFilterTracksByBPM(
   tracks: any,
   minBpm: number,
   maxBpm: number
-) {
+): [TrackInfo[], boolean] {
   const [filteredTracks, setFilteredTracks] = useState([]);
   const { api } = useContext(SpotifyContext);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // Tracks is going to grow by 50 every time it changes. The audio features
   // endpoints only accepts 50 (maybe 100) ids at a time. If we keep track of
@@ -26,6 +31,7 @@ export default function useFilterTracksByBPM(
     if (unfetchedIDs.length === 0) {
       return;
     }
+    setIsLoading(true);
     api
       .getAudioFeaturesForTracks(unfetchedIDs)
       .then(({ audio_features: features }: { audio_features: any }) => {
@@ -43,6 +49,7 @@ export default function useFilterTracksByBPM(
             fetchedTempo <= maxBpm
           );
         });
+        setIsLoading(false);
         setFilteredTracks(updatedTracks);
       });
   }, [api, unfetchedIDs, minBpm, maxBpm, tracks]);
@@ -55,5 +62,5 @@ export default function useFilterTracksByBPM(
     }
   }, [tracks.length, prevTracksLength, fetchTempoAndRecalculate]);
 
-  return filteredTracks;
+  return [filteredTracks, isLoading];
 }
