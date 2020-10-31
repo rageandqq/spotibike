@@ -1,4 +1,4 @@
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 
 import SpotifyContext from "./../SpotifyContext";
 
@@ -16,13 +16,13 @@ export default function useTopSongs(): [any, () => void, boolean, boolean] {
       setTracks(tracks);
     });
   }, [api]);
-  //   const loadMoreRef = useRef(loadMore);
+  const loadMoreRef = useRef(loadMore);
 
-  //   useEffect(() => {
-  //     if (tracks.length === 0) {
-  //       loadMoreRef.current();
-  //     }
-  //   }, [tracks]);
+  useEffect(() => {
+    if (tracks.length === 0) {
+      loadMoreRef.current();
+    }
+  }, [tracks]);
 
   return [tracks, emptyFunction, false, false];
 }
