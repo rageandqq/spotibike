@@ -1,5 +1,6 @@
 import Splash from "./SplashScreen";
 import Setup from "./Setup";
+import Songs from "./Songs";
 import AuthenticatedRoute from "./AuthenticatedRoute";
 
 import * as React from "react";
@@ -12,6 +13,9 @@ function App() {
     <Router>
       <SpotifyProvider>
         <Switch>
+          <AuthenticatedRoute path="/songs">
+            <Songs />
+          </AuthenticatedRoute>
           <AuthenticatedRoute path="/setup">
             <Setup />
           </AuthenticatedRoute>

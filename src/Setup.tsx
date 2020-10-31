@@ -1,9 +1,10 @@
 import * as React from "react";
-import { useContext, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 
 import SpotifyContext from "./SpotifyContext";
 
 import { Button, Box, Slider, makeStyles } from "@material-ui/core";
+import { Link } from "react-router-dom";
 
 const MIN_BPM = 30;
 const MAX_BPM = 150;
@@ -19,19 +20,31 @@ const useStyles = makeStyles({
     marginLeft: 12,
     marginRight: 12,
   },
+  link: {
+    textDecoration: "none",
+  },
 });
 
 const emptyFunction = () => {};
 export default function Setup() {
-  const [value, setValue] = useState([60, 120]);
+  const [bpmRange, setBpmRange] = useState([60, 120]);
 
   const { isAuth } = useContext(SpotifyContext);
 
-  const handleChange = (_: any, newValue: any /* TODO: stricter typing */) => {
-    setValue(newValue);
+  const handleChange = (_: any, newBpm: any /* TODO: stricter typing */) => {
+    setBpmRange(newBpm);
   };
 
   const classes = useStyles();
+  const getSongsURI = useCallback(
+    (useUserArtists: boolean) => {
+      return {
+        pathname: "/songs",
+        search: `?use_user_artists=${useUserArtists}&min_bpm=${bpmRange[0]}&max_bpm=${bpmRange[1]}`,
+      };
+    },
+    [bpmRange]
+  );
 
   if (!isAuth) return <></>;
 
@@ -39,10 +52,10 @@ export default function Setup() {
     <Box display="flex" flexDirection="column" className={classes.root}>
       <div>Recommended BPM: ~90</div>
       <div>
-        Selected BPM: {value[0]} - {value[1]}
+        Selected BPM: {bpmRange[0]} - {bpmRange[1]}
       </div>
       <Slider
-        value={value}
+        value={bpmRange}
         onChange={handleChange}
         valueLabelDisplay="on"
         aria-labelledby="range-slider"
@@ -62,14 +75,25 @@ export default function Setup() {
           onClick={emptyFunction}
           className={classes.button}
         >
-          Make Playlist from Your Artists/Albums
+          {/* TODO proper styling */}
+          <Link
+            to={getSongsURI(true)}
+            style={{ textDecoration: "none", color: "white" }}
+          >
+            Make Playlist from Your Artists/Albums
+          </Link>
         </Button>
         <Button
           variant="contained"
           onClick={emptyFunction}
           className={classes.button}
         >
-          Make Playlist from Random Top Music
+          <Link
+            to={getSongsURI(false)}
+            style={{ textDecoration: "none", color: "black" }}
+          >
+            Make Playlist from Random Top Music
+          </Link>
         </Button>
       </Box>
     </Box>
