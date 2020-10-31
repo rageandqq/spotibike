@@ -1,5 +1,6 @@
 import * as React from "react";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { useHistory } from "react-router-dom";
 
 import SpotifyContext from "./SpotifyContext";
 
@@ -101,6 +102,7 @@ export default function Songs() {
   const [playlistName, setPlaylistName] = useState<string>("");
   const { isAuth, api, userID } = useContext(SpotifyContext);
   const classes = useStyles();
+  const history = useHistory();
 
   const params = new URLSearchParams(window.location.search);
 
@@ -161,13 +163,13 @@ export default function Songs() {
       .createPlaylist(userID, {
         name: playlistName,
         public: false, // make playlist private by default
-        description: "Playlist made by Spotibike tool",
+        description: `${minBpm} to ${maxBpm} BPM playlist - Made with Spotibike`,
       })
       .then((data: { id: string }) => {
         const selectedTrackURIs = selectedTrackInfo.map((info) => info.uri);
         // TODO: handle > 100 items to add to playlist
         api.addTracksToPlaylist(data.id, selectedTrackURIs).then(() => {
-          // TODO: Success handling
+          history.push(`/success/${data.id}`);
         });
       });
   };

@@ -16,7 +16,7 @@ const REDIRECT_URI = "http://localhost:3000/";
 const SCOPES = [
   "playlist-read-private",
   "playlist-modify-private",
-  "user-library-read", // TODO: Determine if we need thsi
+  "user-library-read",
 ];
 
 const ALWAYS_AUTHENTICATE = false; // TODO: we should figure out when we want to authenticate
