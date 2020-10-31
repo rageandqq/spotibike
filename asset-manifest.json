@@ -1,22 +1,22 @@
 {
   "files": {
     "main.css": "/spotibike/static/css/main.244f020a.chunk.css",
-    "main.js": "/spotibike/static/js/main.61d9ad8c.chunk.js",
-    "main.js.map": "/spotibike/static/js/main.61d9ad8c.chunk.js.map",
+    "main.js": "/spotibike/static/js/main.9cc170ed.chunk.js",
+    "main.js.map": "/spotibike/static/js/main.9cc170ed.chunk.js.map",
     "runtime-main.js": "/spotibike/static/js/runtime-main.3b8eed0c.js",
     "runtime-main.js.map": "/spotibike/static/js/runtime-main.3b8eed0c.js.map",
-    "static/js/2.aa1457af.chunk.js": "/spotibike/static/js/2.aa1457af.chunk.js",
-    "static/js/2.aa1457af.chunk.js.map": "/spotibike/static/js/2.aa1457af.chunk.js.map",
+    "static/js/2.4c6ae487.chunk.js": "/spotibike/static/js/2.4c6ae487.chunk.js",
+    "static/js/2.4c6ae487.chunk.js.map": "/spotibike/static/js/2.4c6ae487.chunk.js.map",
     "static/js/3.8ba2d027.chunk.js": "/spotibike/static/js/3.8ba2d027.chunk.js",
     "static/js/3.8ba2d027.chunk.js.map": "/spotibike/static/js/3.8ba2d027.chunk.js.map",
     "index.html": "/spotibike/index.html",
     "static/css/main.244f020a.chunk.css.map": "/spotibike/static/css/main.244f020a.chunk.css.map",
-    "static/js/2.aa1457af.chunk.js.LICENSE.txt": "/spotibike/static/js/2.aa1457af.chunk.js.LICENSE.txt"
+    "static/js/2.4c6ae487.chunk.js.LICENSE.txt": "/spotibike/static/js/2.4c6ae487.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.3b8eed0c.js",
-    "static/js/2.aa1457af.chunk.js",
+    "static/js/2.4c6ae487.chunk.js",
     "static/css/main.244f020a.chunk.css",
-    "static/js/main.61d9ad8c.chunk.js"
+    "static/js/main.9cc170ed.chunk.js"
   ]
 }
