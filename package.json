@@ -12,6 +12,8 @@
     "@types/react": "^16.9.55",
     "@types/react-dom": "^16.9.9",
     "@types/react-router-dom": "^5.1.6",
+    "dotenv": "^8.2.0",
+    "gh-pages": "^3.1.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0",
@@ -21,6 +23,8 @@
     "web-vitals": "^0.2.4"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -46,5 +50,6 @@
   },
   "devDependencies": {
     "prettier": "^2.1.2"
-  }
+  },
+  "homepage": "https://rageandqq.github.io/spotibike"
 }

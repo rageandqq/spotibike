@@ -4,14 +4,14 @@ import { Route } from "react-router-dom";
 import SpotifyContext from "./SpotifyContext";
 import { useContext } from "react";
 
-interface IProps {
-  children: React.ReactNode;
-  path: string;
-}
+const HOSTED_APP_URI = "https://rageandqq.github.io/spotibike/";
+const HOSTED_APP_DEV_URI = "http://localhost:3000/";
 
 const SPOTIFY_AUTH_URI = "https://accounts.spotify.com/authorize";
 const CLIENT_ID = "6fd3ee11d3a146ffad18854c9762964c";
-const REDIRECT_URI = "http://localhost:3000/";
+
+const isDev = process.env.NODE_ENV === "development";
+const REDIRECT_URI = isDev ? HOSTED_APP_DEV_URI : HOSTED_APP_URI;
 
 const SCOPES = [
   "playlist-read-private",
@@ -19,7 +19,7 @@ const SCOPES = [
   "user-library-read",
 ];
 
-const ALWAYS_AUTHENTICATE = false; // TODO: we should figure out when we want to authenticate
+const ALWAYS_AUTHENTICATE = isDev;
 
 const getRedirectURI = () =>
   encodeURI(
@@ -28,6 +28,10 @@ const getRedirectURI = () =>
     )}&show_dialog=${ALWAYS_AUTHENTICATE}`
   );
 
+interface IProps {
+  children: React.ReactNode;
+  path: string;
+}
 export default function AuthenticatedRoute(props: IProps) {
   const { isAuth } = useContext(SpotifyContext);
 
