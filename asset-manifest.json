@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/spotibike/static/css/main.244f020a.chunk.css",
-    "main.js": "/spotibike/static/js/main.cabf540f.chunk.js",
-    "main.js.map": "/spotibike/static/js/main.cabf540f.chunk.js.map",
+    "main.js": "/spotibike/static/js/main.0ac532b4.chunk.js",
+    "main.js.map": "/spotibike/static/js/main.0ac532b4.chunk.js.map",
     "runtime-main.js": "/spotibike/static/js/runtime-main.b38fbe13.js",
     "runtime-main.js.map": "/spotibike/static/js/runtime-main.b38fbe13.js.map",
     "static/js/2.415e0906.chunk.js": "/spotibike/static/js/2.415e0906.chunk.js",
@@ -17,6 +17,6 @@
     "static/js/runtime-main.b38fbe13.js",
     "static/js/2.415e0906.chunk.js",
     "static/css/main.244f020a.chunk.css",
-    "static/js/main.cabf540f.chunk.js"
+    "static/js/main.0ac532b4.chunk.js"
   ]
 }
