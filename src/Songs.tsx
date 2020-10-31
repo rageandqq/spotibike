@@ -1,6 +1,8 @@
 import * as React from "react";
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
+import useUserSongs from "./hooks/useUserSongs";
+import useFilterTracksByBPM from "./hooks/useFilterTracksByBPM";
 
 import SpotifyContext from "./SpotifyContext";
 
@@ -30,67 +32,6 @@ const useStyles = makeStyles({
     marginRight: 12,
   },
 });
-
-function useUserSongs() {
-  const [tracks, setTracks] = useState([]);
-  const tracksRef = useRef(tracks);
-
-  const { api } = useContext(SpotifyContext);
-
-  // todo: use offset for load more
-  const loadMore = useCallback(() => {
-    api
-      .getMySavedTracks({ limit: 50, offset: tracksRef.current.length ?? 0 })
-      .then((data: any) => {
-        setTracks(
-          data.items.map((i: { added_at: string; track: any }) => i.track)
-        );
-      });
-  }, [api]);
-  const loadMoreRef = useRef(loadMore);
-
-  useEffect(() => {
-    if (tracks.length === 0) {
-      loadMoreRef.current();
-    }
-  }, [tracks]);
-
-  return [tracks, loadMoreRef.current];
-}
-
-function useFilterTracksByBPM(tracks: any, minBpm: number, maxBpm: number) {
-  const [filteredTracks, setFilteredTracks] = useState([]);
-  const { api } = useContext(SpotifyContext);
-
-  const filterTracks = useCallback(() => {
-    const ids = tracks.map(({ id }: { id: string }) => id);
-    // TODO: handle case of more than limit (50) ids
-    api
-      .getAudioFeaturesForTracks(ids)
-      .then(({ audio_features: features }: { audio_features: any }) => {
-        const filteredIds = features
-          .filter((feature: { tempo: number }) => {
-            if (feature == null) {
-              return false;
-            }
-            const { tempo } = feature;
-            return tempo >= minBpm && tempo <= maxBpm;
-          })
-          .map((feature: any) => feature.id);
-        const filteredTracks = tracks.filter((t: any) =>
-          filteredIds.includes(t.id)
-        );
-        setFilteredTracks(filteredTracks);
-      });
-  }, [api, tracks, minBpm, maxBpm]);
-
-  useEffect(() => {
-    // filter whenever tracks length changes
-    filterTracks();
-  }, [tracks.length]);
-
-  return filteredTracks;
-}
 
 type TrackInfo = {
   id: string;
