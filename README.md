@@ -1,5 +1,9 @@
 # Spotibike
 
+## Demo
+
+[Try the app out here!](https://rageandqq.github.io/spotibike/)
+
 ## About
 
 An app to help creating playlists to bike to.
