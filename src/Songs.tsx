@@ -89,32 +89,24 @@ export default function Songs() {
   const handleClick = (id: string, uri: string) => {
     const selectedIndex = selectedTrackInfo.map((info) => info.id).indexOf(id);
     let newSelected: TrackInfo[] = [];
+    newSelected = newSelected.concat(selectedTrackInfo);
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selectedTrackInfo, { id, uri });
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selectedTrackInfo.slice(1));
-    } else if (selectedIndex === selectedTrackInfo.length - 1) {
-      newSelected = newSelected.concat(selectedTrackInfo.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = selectedTrackInfo.concat(
-        selectedTrackInfo.slice(0, selectedIndex),
-        selectedTrackInfo.slice(selectedIndex + 1)
-      );
+      // add to selected tracks
+      newSelected.push({ id, uri });
+    } else {
+      // remove selected
+      newSelected = newSelected.splice(selectedIndex, 1);
     }
-
     setSelectedTrackInfo(newSelected);
   };
 
   const handleSelectAllClicked = () => {
     if (selectedTrackInfo.length === 0) {
-      const selectedTrackInfo = filteredTracks.map(
-        ({ id, uri }: { id: string; uri: string }) => ({
-          id,
-          uri,
-        })
+      const updatedTrackInfo: TrackInfo[] = filteredTracks.map(
+        ({ id, uri }: TrackInfo) => ({ id, uri })
       );
-      setSelectedTrackInfo(selectedTrackInfo);
+      setSelectedTrackInfo(updatedTrackInfo);
     } else {
       setSelectedTrackInfo([]);
     }
@@ -196,7 +188,9 @@ export default function Songs() {
                   hover
                   role="checkbox"
                   key={track.id}
-                  onClick={() => handleClick(track.id, track.uri)}
+                  onClick={() => {
+                    handleClick(track.id, track.uri);
+                  }}
                 >
                   <TableCell padding="checkbox">
                     <Checkbox checked={isSelected} />
