@@ -8,13 +8,13 @@ type IProps = {
   children: React.ReactNode;
 };
 
-const spotifyApi = new SpotifyWebApi();
+const api = new SpotifyWebApi();
 
 export default function SpotifyProvider({ children }: IProps) {
-  const api = new SpotifyWebApi();
   const hashParams = new URLSearchParams(
     window.location.hash.substr(1) // skip the first char (#)
   );
+
   const accessTokenFromAuth = hashParams.get("access_token");
   const expiresInFromAuth = hashParams.get("exipres_in");
 
