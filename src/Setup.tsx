@@ -122,7 +122,7 @@ export default function Setup() {
             to={getSongsURI(true)}
             style={{ textDecoration: "none", color: "white" }}
           >
-            Make Playlist from Your Artists/Albums
+            Make Playlist from Your Liked Songs
           </Link>
         </Button>
         <Button
