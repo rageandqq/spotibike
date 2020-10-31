@@ -169,7 +169,7 @@ export default function Songs() {
         const selectedTrackURIs = selectedTrackInfo.map((info) => info.uri);
         // TODO: handle > 100 items to add to playlist
         api.addTracksToPlaylist(data.id, selectedTrackURIs).then(() => {
-          history.push(`/success/${data.id}`);
+          history.push(`/spotibike/success/${data.id}`);
         });
       });
   };

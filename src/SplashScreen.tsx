@@ -11,7 +11,7 @@ export default function Splash() {
   return (
     <div>
       <header className="Splash-header">
-        <Link to="/setup">{isAuth ? "Continue" : "Login"}</Link>
+        <Link to="/spotibike/setup">{isAuth ? "Continue" : "Login"}</Link>
       </header>
     </div>
   );

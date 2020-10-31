@@ -39,7 +39,7 @@ export default function Setup() {
   const getSongsURI = useCallback(
     (useUserArtists: boolean) => {
       return {
-        pathname: "/songs",
+        pathname: "/spotibike/songs",
         search: `?use_user_artists=${useUserArtists}&min_bpm=${bpmRange[0]}&max_bpm=${bpmRange[1]}`,
       };
     },

@@ -14,16 +14,16 @@ function App() {
     <Router>
       <SpotifyProvider>
         <Switch>
-          <AuthenticatedRoute path="/success/:playlistid">
+          <AuthenticatedRoute path="/spotibike/success/:playlistid">
             <Success />
           </AuthenticatedRoute>
-          <AuthenticatedRoute path="/songs">
+          <AuthenticatedRoute path="/spotibike/songs">
             <Songs />
           </AuthenticatedRoute>
-          <AuthenticatedRoute path="/setup">
+          <AuthenticatedRoute path="/spotibike/setup">
             <Setup />
           </AuthenticatedRoute>
-          <Route path="/">
+          <Route path="/spotibike/">
             <Splash />
           </Route>
         </Switch>

@@ -5,7 +5,7 @@ import SpotifyContext from "./SpotifyContext";
 import { useContext } from "react";
 
 const HOSTED_APP_URI = "https://rageandqq.github.io/spotibike/";
-const HOSTED_APP_DEV_URI = "http://localhost:3000/";
+const HOSTED_APP_DEV_URI = "http://localhost:3000/spotibike/";
 
 const SPOTIFY_AUTH_URI = "https://accounts.spotify.com/authorize";
 const CLIENT_ID = "6fd3ee11d3a146ffad18854c9762964c";
