@@ -96,7 +96,7 @@ export default function Songs() {
       newSelected.push({ id, uri });
     } else {
       // remove selected
-      newSelected = newSelected.splice(selectedIndex, 1);
+      newSelected.splice(selectedIndex, 1);
     }
     setSelectedTrackInfo(newSelected);
   };
