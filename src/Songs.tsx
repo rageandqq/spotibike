@@ -40,6 +40,16 @@ type TrackInfo = {
   uri: string;
 };
 
+// https://scotch.io/courses/the-ultimate-guide-to-javascript-algorithms/array-chunking
+function chunkArray(array: any[], size: number) {
+  let result = [];
+  for (let i = 0; i < array.length; i += size) {
+    let chunk = array.slice(i, i + size);
+    result.push(chunk);
+  }
+  return result;
+}
+
 function useSongs(
   useUserArtists: boolean
 ): [any, () => void, boolean, boolean] {
@@ -70,7 +80,6 @@ export default function Songs() {
     minBpm,
     maxBpm
   );
-  console.log({ tracks, filteredTracks });
 
   if (!isAuth) return <></>;
 
@@ -122,8 +131,11 @@ export default function Songs() {
       })
       .then((data: { id: string }) => {
         const selectedTrackURIs = selectedTrackInfo.map((info) => info.uri);
-        // TODO: handle > 100 items to add to playlist
-        api.addTracksToPlaylist(data.id, selectedTrackURIs).then(() => {
+        // Ensure that we only add up to 100 songs at a time
+        const chunkedURIs = chunkArray(selectedTrackURIs, 100);
+        Promise.all(
+          chunkedURIs.map((uris) => api.addTracksToPlaylist(data.id, uris))
+        ).then(() => {
           history.push(`/spotibike/success/${data.id}`);
         });
       });

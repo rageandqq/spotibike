@@ -15,6 +15,10 @@ export default function useFilterTracksByBPM(
   const [filteredTracks, setFilteredTracks] = useState([]);
   const { api } = useContext(SpotifyContext);
 
+  // Tracks is going to grow by 50 every time it changes. The audio features
+  // endpoints only accepts 50 (maybe 100) ids at a time. If we keep track of
+  // ones we've already queried info for, and only query tempo for new tracks,
+  // we'll never hit the limit. Hopefully. ಠ⌣ಠ
   const unfetchedIDs = tracks
     .filter(({ id }: { id: string }) => !tempoMap.has(id))
     .map(({ id }: { id: string }) => id);
